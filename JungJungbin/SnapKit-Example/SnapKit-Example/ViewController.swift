@@ -32,12 +32,12 @@ class ViewController: UIViewController {
         $0.alignment = .fill
     }
     
-    private let removeOrangeButton = UIButton().then {
+    private let removeOrangeButton = UIButton(type: .system).then {
         $0.setTitle("remove orange", for: .normal)
         $0.setTitleColor(.orange, for: .normal)
     }
     
-    private let goScrollViewButton = UIButton().then {
+    private let goScrollViewButton = UIButton(type: .system).then {
         $0.setTitle("go scroll view", for: .normal)
         $0.setTitleColor(.systemPink, for: .normal)
     }
