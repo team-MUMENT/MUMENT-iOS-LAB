@@ -25,7 +25,7 @@ extension UIButton {
     func press(vibrate: Bool = false, for controlEvents: UIControl.Event = .touchUpInside, _ closure: @escaping()->()) {
         if #available(iOS 14.0, *) {
             self.addAction(UIAction { (action: UIAction) in closure()
-//                self.clickedAnimation(vibrate: vibrate)
+                //                self.clickedAnimation(vibrate: vibrate)
             }, for: controlEvents)
         } else {
             @objc class ClosureSleeve: NSObject {
@@ -37,5 +37,19 @@ extension UIButton {
             self.addTarget(sleeve, action: #selector(ClosureSleeve.invoke), for: controlEvents)
             objc_setAssociatedObject(self, "\(UUID())", sleeve, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN)
         }
+    }
+}
+
+extension UIStackView {
+    func addArrangedSubviews(_ views: [UIView]) {
+        for view in views {
+            self.addArrangedSubview(view)
+        }
+    }
+}
+
+extension UIView {
+    func addSubviews(_ views: [UIView]) {
+        views.forEach { self.addSubview($0) }
     }
 }

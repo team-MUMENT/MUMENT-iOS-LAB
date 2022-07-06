@@ -36,11 +36,8 @@ class ViewController: UIViewController {
     }
     
     private func setUI() {
-        stackView.addArrangedSubview(leftview)
-        stackView.addArrangedSubview(centerView)
-        stackView.addArrangedSubview(rightView)
-        view.addSubview(stackView)
-        view.addSubview(removeOrangeButton)
+        stackView.addArrangedSubviews([leftview, centerView, rightView])
+        view.addSubviews([stackView, removeOrangeButton])
         
         leftview.snp.makeConstraints {
             $0.width.equalTo(100)
