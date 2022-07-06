@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C74EC40C287559CC0068EB46 /* ScrollViewVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C74EC40B287559CC0068EB46 /* ScrollViewVC.swift */; };
 		C780FDFC2874206700F617E7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C780FDFB2874206700F617E7 /* AppDelegate.swift */; };
 		C780FDFE2874206700F617E7 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C780FDFD2874206700F617E7 /* SceneDelegate.swift */; };
 		C780FE002874206700F617E7 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C780FDFF2874206700F617E7 /* ViewController.swift */; };
@@ -19,6 +20,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		C74EC40B287559CC0068EB46 /* ScrollViewVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollViewVC.swift; sourceTree = "<group>"; };
 		C780FDF82874206700F617E7 /* SnapKit-Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "SnapKit-Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C780FDFB2874206700F617E7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C780FDFD2874206700F617E7 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -70,6 +72,7 @@
 				C780FE062874206800F617E7 /* LaunchScreen.storyboard */,
 				C780FE092874206800F617E7 /* Info.plist */,
 				C780FE17287440FD00F617E7 /* Extension.swift */,
+				C74EC40B287559CC0068EB46 /* ScrollViewVC.swift */,
 			);
 			path = "SnapKit-Example";
 			sourceTree = "<group>";
@@ -156,6 +159,7 @@
 				C780FE002874206700F617E7 /* ViewController.swift in Sources */,
 				C780FDFC2874206700F617E7 /* AppDelegate.swift in Sources */,
 				C780FDFE2874206700F617E7 /* SceneDelegate.swift in Sources */,
+				C74EC40C287559CC0068EB46 /* ScrollViewVC.swift in Sources */,
 				C780FE18287440FD00F617E7 /* Extension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
