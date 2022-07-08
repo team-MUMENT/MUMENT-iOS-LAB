@@ -14,7 +14,8 @@ import Then
  */
 class ViewController: UIViewController {
     
-    var dataSource: [UIColor] = [.purple,.systemIndigo,.systemGreen]
+//    var dataSource: [UIColor] = [.purple,.systemIndigo,.systemGreen]
+    var dataSource:[CVCModel] = CVCModel.sampleData
     
     private lazy var carouselCV = UICollectionView(frame: .zero, collectionViewLayout: CVFlowLayout)
     private let CVFlowLayout = UICollectionViewFlowLayout()
@@ -22,7 +23,7 @@ class ViewController: UIViewController {
         dataSource.count
     }
     
-    private lazy var increasedDataSource: [UIColor] = {
+    private lazy var increasedDataSource: [CVCModel] = {
         dataSource + dataSource + dataSource
     }()
     
@@ -38,8 +39,9 @@ class ViewController: UIViewController {
     private func carouselCollectionViewAttribute() {
         carouselCV.delegate = self
         carouselCV.dataSource = self
-        carouselCV.register(MyCell.self, forCellWithReuseIdentifier: MyCell.reuseIdentifier)
+        carouselCV.register(CVC.self, forCellWithReuseIdentifier: CVC.reuseIdentifier)
         carouselCV.backgroundColor = .systemPurple
+        carouselCV.showsHorizontalScrollIndicator = false
         
         // 그냥 슬라이딩이 아니라 페이지별로 나뉘어 넘어가지도록
         carouselCV.isPagingEnabled = true
@@ -102,9 +104,9 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView,
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MyCell.reuseIdentifier, for: indexPath)
-        if let cell = cell as? MyCell {
-            cell.model = increasedDataSource[indexPath.item]
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CVC.reuseIdentifier, for: indexPath)
+        if let cell = cell as? CVC {
+            cell.setData(increasedDataSource[indexPath.row])
         }
         
         return cell
