@@ -14,66 +14,59 @@ import Then
 */
 class ViewController: UIViewController {
 
-    var dataSource: [String] = []
+    var dataSource: [UIColor] = [.purple,.systemIndigo,.systemGreen]
     
-    lazy var collectionView: UICollectionView = {
-        let flowLayout = UICollectionViewFlowLayout()
-        flowLayout.scrollDirection = .horizontal
-        flowLayout.minimumLineSpacing = 50 // cell사이의 간격 설정
-        let view = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
-        view.backgroundColor = .brown
-
-        return view
-    }()
+    private lazy var carouselCollectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionViewFlowLayout)
+    private let collectionViewFlowLayout = UICollectionViewFlowLayout()
+    
+    private func carouselCollectionViewAttribute() {
+            carouselCollectionView.delegate = self
+            carouselCollectionView.dataSource = self
+            carouselCollectionView.register(MyCell.self, forCellWithReuseIdentifier: MyCell.reuseIdentifier)
+            carouselCollectionView.backgroundColor = .systemPurple
+        
+        // 그냥 슬라이딩이 아니라 페이지별로 나뉘어 넘어가지도록
+            carouselCollectionView.isPagingEnabled = true
+        
+        // 수평 스크롤
+            collectionViewFlowLayout.scrollDirection = .horizontal
+        }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        setupDataSource()
-
-        addSubviews()
-
-        setupDelegate()
-
-        registerCell()
-
-        configure()
+        carouselCollectionViewAttribute()
+        setLayout()
     }
-
-    private func setupDataSource() {
-        for i in 0...10 {
-            dataSource += ["\(i)"]
-        }
-    }
-
-    private func addSubviews() {
-        view.addSubview(collectionView)
-    }
-
-    private func setupDelegate() {
-        collectionView.delegate = self
-        collectionView.dataSource = self
-    }
-
-    private func registerCell() {
-        collectionView.register(MyCell.self, forCellWithReuseIdentifier: MyCell.reuseIdentifier)
-    }
-
-    private func configure() {
-        collectionView.snp.makeConstraints { make in
-            make.center.leading.trailing.equalToSuperview()
-            make.height.equalTo(320)
+    
+    private func setLayout() {
+        view.addSubview(carouselCollectionView)
+        carouselCollectionView.snp.makeConstraints{
+            $0.center.leading.trailing.equalTo(self.view.safeAreaLayoutGuide)
+            $0.height.equalTo(500)
         }
     }
 
 }
 extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
-
+    
+    func scrollViewWillEndDragging(_ scrollView: UIScrollView,
+                                   withVelocity velocity: CGPoint,
+                                   targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        let endOffset = scrollView.contentSize.width - carouselCollectionView.frame.width
+        
+        if scrollView.contentOffset.x < .zero && velocity.x < .zero {
+            print("처음 -> 마지막")
+        } else if scrollView.contentOffset.x > endOffset && velocity.x > .zero  {
+            print("마지막 -> 처음")
+        }
+    }
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return dataSource.count
     }
 
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    func collectionView(_ collectionView: UICollectionView,
+                        cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MyCell.reuseIdentifier, for: indexPath)
         if let cell = cell as? MyCell {
             cell.model = dataSource[indexPath.item]
@@ -84,8 +77,10 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
 }
 
 extension ViewController: UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 320, height: collectionView.frame.height) // point
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: UIScreen.main.bounds.width, height: collectionView.frame.height)
     }
 }
 
