@@ -10,11 +10,15 @@ import SnapKit
 import Then
 
 /*Carousel View:
- CollectionView를 Horizontal 방향으로 돌려 쓰는 것
+  CollectionView를 Horizontal 방향으로 돌려 쓰는 것
  */
 class ViewController: UIViewController {
     
-    var dataSource:[CVCModel] = CVCModel.sampleData
+    // MARK: - Properties
+    var dataSource: [CVCModel] = CVCModel.sampleData
+    private lazy var increasedDataSource: [CVCModel] = {
+        dataSource + dataSource + dataSource
+    }()
     
     private lazy var carouselCV = UICollectionView(frame: .zero, collectionViewLayout: CVFlowLayout)
     private let CVFlowLayout = UICollectionViewFlowLayout()
@@ -22,30 +26,23 @@ class ViewController: UIViewController {
         dataSource.count
     }
     
-    private lazy var increasedDataSource: [CVCModel] = {
-        dataSource + dataSource + dataSource
-    }()
-    
     private var scrollToEnd: Bool = false
     private var scrollToBegin: Bool = false
     
+    // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        carouselCollectionViewAttribute()
+        setCV()
         setLayout()
     }
 
-    private func carouselCollectionViewAttribute() {
-//        for i in 0..<CVCModel.sampleData.count {
-//            CVCModel.sampleData[i].pageNum = i+1
-//            print( CVCModel.sampleData[i].pageNum)
-//        }
-//        carouselCV.reloadData()
-        
+    // MARK: - Functions
+    private func setCV() {
         carouselCV.delegate = self
         carouselCV.dataSource = self
         carouselCV.register(CVC.self, forCellWithReuseIdentifier: CVC.reuseIdentifier)
-        carouselCV.backgroundColor = .systemPurple
+        
+        //ScrollIndicator 안 보이게
         carouselCV.showsHorizontalScrollIndicator = false
         
         // 그냥 슬라이딩이 아니라 페이지별로 나뉘어 넘어가지도록
@@ -61,7 +58,10 @@ class ViewController: UIViewController {
                                 at: .centeredHorizontally,
                                 animated: false)
     }
-    
+}
+
+// MARK: - UI
+extension ViewController {
     private func setLayout() {
         view.addSubview(carouselCV)
         carouselCV.snp.makeConstraints{
@@ -69,9 +69,9 @@ class ViewController: UIViewController {
             $0.height.equalTo(400)
         }
     }
-    
 }
 
+// MARK: - UICollectionViewDelegate, UICollectionViewDataSource
 extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     
     func scrollViewWillEndDragging(_ scrollView: UIScrollView,
@@ -119,6 +119,7 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     }
 }
 
+// MARK: - UICollectionViewDelegateFlowLayout
 extension ViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,

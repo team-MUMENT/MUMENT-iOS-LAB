@@ -11,6 +11,7 @@ import Then
 
 class CVC: UICollectionViewCell {
 
+    // MARK: - Properties
     lazy var pageButton = UIButton().then{
         $0.layer.cornerRadius = 12
         $0.backgroundColor = .white
@@ -58,10 +59,9 @@ class CVC: UICollectionViewCell {
         artistLabel.text = cellData.artistName
         pageButton.setTitle("    \(index) / 3 >  ", for: .normal)
     }
-
-
 }
 
+// MARK: - UI
 extension CVC {
     
     private func setLayout() {
