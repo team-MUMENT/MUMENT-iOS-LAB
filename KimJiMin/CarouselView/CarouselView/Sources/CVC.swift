@@ -50,13 +50,13 @@ class CVC: UICollectionViewCell {
     }
 
     //MARK: - Functions
-    func setData(_ cellData: CVCModel){
+    func setData(_ cellData: CVCModel,index: Int){
         self.backgroundColor = cellData.color
         headerLable.text = cellData.headerTitle
         albumImage.image = cellData.albumImage
         songTitleLabel.text = cellData.songTitle
         artistLabel.text = cellData.artistName
-        pageButton.setTitle(cellData.buttonLabel, for: .normal)
+        pageButton.setTitle("    \(index) / 3 >  ", for: .normal)
     }
 
 
@@ -69,7 +69,7 @@ extension CVC {
         
         headerLable.snp.makeConstraints{
             $0.leading.top.equalTo(self.safeAreaLayoutGuide).inset(32)
-            $0.trailing.equalTo(self.safeAreaLayoutGuide).inset(180)
+            $0.trailing.equalTo(self.safeAreaLayoutGuide).inset(140)
         }
         
         albumImage.snp.makeConstraints{
@@ -90,7 +90,7 @@ extension CVC {
         
         pageButton.snp.makeConstraints {
             $0.leading.equalTo(self.safeAreaLayoutGuide.snp.leading).offset(38)
-            $0.bottom.equalTo(self.safeAreaLayoutGuide.snp.bottom).inset(20)
+            $0.bottom.equalTo(self.safeAreaLayoutGuide.snp.bottom).inset(26)
         }
     }
 }

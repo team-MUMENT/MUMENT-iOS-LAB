@@ -14,7 +14,6 @@ import Then
  */
 class ViewController: UIViewController {
     
-//    var dataSource: [UIColor] = [.purple,.systemIndigo,.systemGreen]
     var dataSource:[CVCModel] = CVCModel.sampleData
     
     private lazy var carouselCV = UICollectionView(frame: .zero, collectionViewLayout: CVFlowLayout)
@@ -35,8 +34,14 @@ class ViewController: UIViewController {
         carouselCollectionViewAttribute()
         setLayout()
     }
-    
+
     private func carouselCollectionViewAttribute() {
+//        for i in 0..<CVCModel.sampleData.count {
+//            CVCModel.sampleData[i].pageNum = i+1
+//            print( CVCModel.sampleData[i].pageNum)
+//        }
+//        carouselCV.reloadData()
+        
         carouselCV.delegate = self
         carouselCV.dataSource = self
         carouselCV.register(CVC.self, forCellWithReuseIdentifier: CVC.reuseIdentifier)
@@ -52,7 +57,7 @@ class ViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        carouselCV.scrollToItem(at: IndexPath(item: increasedDataSource.count / 3, section: 0),
+        carouselCV.scrollToItem(at: IndexPath(item: increasedDataSource.count / 3,section: 0),
                                 at: .centeredHorizontally,
                                 animated: false)
     }
@@ -61,11 +66,12 @@ class ViewController: UIViewController {
         view.addSubview(carouselCV)
         carouselCV.snp.makeConstraints{
             $0.center.leading.trailing.equalTo(self.view.safeAreaLayoutGuide)
-            $0.height.equalTo(500)
+            $0.height.equalTo(400)
         }
     }
     
 }
+
 extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     
     func scrollViewWillEndDragging(_ scrollView: UIScrollView,
@@ -106,9 +112,9 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CVC.reuseIdentifier, for: indexPath)
         if let cell = cell as? CVC {
-            cell.setData(increasedDataSource[indexPath.row])
+            cell.setData(increasedDataSource[indexPath.row],index:indexPath.row%3+1)
         }
-        
+
         return cell
     }
 }
