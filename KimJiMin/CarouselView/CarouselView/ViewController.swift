@@ -10,68 +10,103 @@ import SnapKit
 import Then
 
 /*Carousel View:
-    CollectionView를 Horizontal 방향으로 돌려 쓰는 것
-*/
+ CollectionView를 Horizontal 방향으로 돌려 쓰는 것
+ */
 class ViewController: UIViewController {
-
+    
     var dataSource: [UIColor] = [.purple,.systemIndigo,.systemGreen]
     
-    private lazy var carouselCollectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionViewFlowLayout)
-    private let collectionViewFlowLayout = UICollectionViewFlowLayout()
+    private lazy var carouselCV = UICollectionView(frame: .zero, collectionViewLayout: CVFlowLayout)
+    private let CVFlowLayout = UICollectionViewFlowLayout()
+    private var originalDataSourceCount: Int {
+        dataSource.count
+    }
     
-    private func carouselCollectionViewAttribute() {
-            carouselCollectionView.delegate = self
-            carouselCollectionView.dataSource = self
-            carouselCollectionView.register(MyCell.self, forCellWithReuseIdentifier: MyCell.reuseIdentifier)
-            carouselCollectionView.backgroundColor = .systemPurple
-        
-        // 그냥 슬라이딩이 아니라 페이지별로 나뉘어 넘어가지도록
-            carouselCollectionView.isPagingEnabled = true
-        
-        // 수평 스크롤
-            collectionViewFlowLayout.scrollDirection = .horizontal
-        }
-
+    private lazy var increasedDataSource: [UIColor] = {
+        dataSource + dataSource + dataSource
+    }()
+    
+    private var scrollToEnd: Bool = false
+    private var scrollToBegin: Bool = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         carouselCollectionViewAttribute()
         setLayout()
     }
     
+    private func carouselCollectionViewAttribute() {
+        carouselCV.delegate = self
+        carouselCV.dataSource = self
+        carouselCV.register(MyCell.self, forCellWithReuseIdentifier: MyCell.reuseIdentifier)
+        carouselCV.backgroundColor = .systemPurple
+        
+        // 그냥 슬라이딩이 아니라 페이지별로 나뉘어 넘어가지도록
+        carouselCV.isPagingEnabled = true
+        
+        // 수평 스크롤
+        CVFlowLayout.scrollDirection = .horizontal
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        carouselCV.scrollToItem(at: IndexPath(item: increasedDataSource.count / 3, section: 0),
+                                at: .centeredHorizontally,
+                                animated: false)
+    }
+    
     private func setLayout() {
-        view.addSubview(carouselCollectionView)
-        carouselCollectionView.snp.makeConstraints{
+        view.addSubview(carouselCV)
+        carouselCV.snp.makeConstraints{
             $0.center.leading.trailing.equalTo(self.view.safeAreaLayoutGuide)
             $0.height.equalTo(500)
         }
     }
-
+    
 }
 extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     
     func scrollViewWillEndDragging(_ scrollView: UIScrollView,
                                    withVelocity velocity: CGPoint,
                                    targetContentOffset: UnsafeMutablePointer<CGPoint>) {
-        let endOffset = scrollView.contentSize.width - carouselCollectionView.frame.width
+        let beginOffset = carouselCV.frame.width * CGFloat(originalDataSourceCount)
+        let endOffset = carouselCV.frame.width * CGFloat(originalDataSourceCount * 2 - 1)
         
-        if scrollView.contentOffset.x < .zero && velocity.x < .zero {
-            print("처음 -> 마지막")
-        } else if scrollView.contentOffset.x > endOffset && velocity.x > .zero  {
-            print("마지막 -> 처음")
+        if scrollView.contentOffset.x < beginOffset && velocity.x < .zero {
+            scrollToEnd = true
+        } else if scrollView.contentOffset.x > endOffset && velocity.x > .zero {
+            scrollToBegin = true
+        }
+    }
+    
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        if scrollToBegin {
+            carouselCV.scrollToItem(at: IndexPath(item: originalDataSourceCount, section: .zero),
+                                    at: .centeredHorizontally,
+                                    animated: false)
+            scrollToBegin.toggle()
+            return
+        }
+        if scrollToEnd {
+            carouselCV.scrollToItem(at: IndexPath(item: originalDataSourceCount * 2 - 1, section: .zero),
+                                    at: .centeredHorizontally,
+                                    animated: false)
+            scrollToEnd.toggle()
+            return
         }
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return dataSource.count
+        return increasedDataSource.count
     }
-
+    
     func collectionView(_ collectionView: UICollectionView,
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MyCell.reuseIdentifier, for: indexPath)
         if let cell = cell as? MyCell {
-            cell.model = dataSource[indexPath.item]
+            cell.model = increasedDataSource[indexPath.item]
         }
-
+        
         return cell
     }
 }
@@ -81,6 +116,9 @@ extension ViewController: UICollectionViewDelegateFlowLayout {
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: UIScreen.main.bounds.width, height: collectionView.frame.height)
+    }
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return .zero
     }
 }
 
